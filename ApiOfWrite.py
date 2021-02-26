@@ -96,12 +96,12 @@ def apiReq(method,a,url,data='QAQ'):
     return posttext     
           
 
-#上传文件到onedrive(小于4M)
-def uploadFile(a,filesname,f):
-    url=r'https://graph.microsoft.com/v1.0/me/drive/root:/AutoApi/App'+str(a)+r'/'+filesname+r':/content'
-    if apiReq('put',a,url,f).status_code >= 300 :
-        if sys._getframe().f_code.co_name not in log_list[a]:
-            log_list[a]=log_list[a]+sys._getframe().f_code.co_name+','
+###上传文件到onedrive(小于4M)
+##def uploadFile(a,filesname,f):
+##    url=r'https://graph.microsoft.com/v1.0/me/drive/root:/AutoApi/App'+str(a)+r'/'+filesname+r':/content'
+##    if apiReq('put',a,url,f).status_code >= 300 :
+##        if sys._getframe().f_code.co_name not in log_list[a]:
+##            log_list[a]=log_list[a]+sys._getframe().f_code.co_name+','
     
         
 # 发送邮件到自定义邮箱
@@ -120,38 +120,39 @@ def sendEmail(a,subject,content):
             log_list[a]=log_list[a]+sys._getframe().f_code.co_name+','
     	
 	
-#修改excel(这函数分离好像意义不大)
-#api-获取itemid: https://graph.microsoft.com/v1.0/me/drive/root/search(q='.xlsx')?select=name,id,webUrl
-def excelWrite(a,filesname,sheet):
-    try:
-        print('    添加工作表')
-        url=r'https://graph.microsoft.com/v1.0/me/drive/root:/AutoApi/App'+str(a)+r'/'+filesname+r':/workbook/worksheets/add'
-        data={
-             "name": sheet
-             }
-        apiReq('post',a,url,json.dumps(data))
-        print('    添加表格')
-        url=r'https://graph.microsoft.com/v1.0/me/drive/root:/AutoApi/App'+str(a)+r'/'+filesname+r':/workbook/worksheets/'+sheet+r'/tables/add'
-        data={
-             "address": "A1:D8",
-             "hasHeaders": False
-             }
-        jsontxt=json.loads(apiReq('post',a,url,json.dumps(data)).text)
-        print('    添加行')
-        url=r'https://graph.microsoft.com/v1.0/me/drive/root:/AutoApi/App'+str(a)+r'/'+filesname+r':/workbook/tables/'+jsontxt['id']+r'/rows/add'
-        rowsvalues=[[0]*4]*2
-        for v1 in range(0,2):
-            for v2 in range(0,4):
-                rowsvalues[v1][v2]=random.randint(1,1200)
-        data={
-             "values": rowsvalues
-             }
-        apiReq('post',a,url,json.dumps(data))
-    except:
-        print("        操作中断")
-        if sys._getframe().f_code.co_name not in log_list[a]:
-            log_list[a]=log_list[a]+sys._getframe().f_code.co_name+','
-        return 
+###修改excel(这函数分离好像意义不大)
+###api-获取itemid: https://graph.microsoft.com/v1.0/me/drive/root/search(q='.xlsx')?select=name,id,webUrl
+##def excelWrite(a,filesname,sheet):
+##    try:
+##        print('    添加工作表')
+##        url=r'https://graph.microsoft.com/v1.0/me/drive/root:/AutoApi/App'+str(a)+r'/'+filesname+r':/workbook/worksheets/add'
+##        data={
+##             "name": sheet
+##             }
+##        print('    添加表格')
+##        apiReq('post',a,url,json.dumps(data))
+##        print('    添加表格')
+##        url=r'https://graph.microsoft.com/v1.0/me/drive/root:/AutoApi/App'+str(a)+r'/'+filesname+r':/workbook/worksheets/'+sheet+r'/tables/add'
+##        data={
+##             "address": "A1:D8",
+##             "hasHeaders": False
+##             }
+##        jsontxt=json.loads(apiReq('post',a,url,json.dumps(data)).text)
+##        print('    添加行')
+##        url=r'https://graph.microsoft.com/v1.0/me/drive/root:/AutoApi/App'+str(a)+r'/'+filesname+r':/workbook/tables/'+jsontxt['id']+r'/rows/add'
+##        rowsvalues=[[0]*4]*2
+##        for v1 in range(0,2):
+##            for v2 in range(0,4):
+##                rowsvalues[v1][v2]=random.randint(1,1200)
+##        data={
+##             "values": rowsvalues
+##             }
+##        apiReq('post',a,url,json.dumps(data))
+##    except:
+##        print("        操作中断")
+##        if sys._getframe().f_code.co_name not in log_list[a]:
+##            log_list[a]=log_list[a]+sys._getframe().f_code.co_name+','
+##        return 
     
 def taskWrite(a,taskname):
     try:
@@ -217,28 +218,28 @@ def teamWrite(a,channelname):
             log_list[a]=log_list[a]+sys._getframe().f_code.co_name+','
         return 
         
-def onenoteWrite(a,notename):
-    try:
-        print('    创建笔记本')
-        url=r'https://graph.microsoft.com/v1.0/me/onenote/notebooks'
-        data={
-             "displayName": notename,
-             }
-        notetxt = json.loads(apiReq('post',a,url,json.dumps(data)).text)
-        print('    创建笔记本分区')
-        url=r'https://graph.microsoft.com/v1.0/me/onenote/notebooks/'+notetxt['id']+r'/sections'
-        data={
-             "displayName": notename,
-             }
-        apiReq('post',a,url,json.dumps(data))
-        print('    删除笔记本')
-        url=r'https://graph.microsoft.com/v1.0/me/drive/root:/Notebooks/'+notename
-        apiReq('delete',a,url)
-    except:
-        print("        操作中断")
-        if sys._getframe().f_code.co_name not in log_list[a]:
-            log_list[a]=log_list[a]+sys._getframe().f_code.co_name+','
-        return
+##def onenoteWrite(a,notename):
+##    try:
+##        print('    创建笔记本')
+##        url=r'https://graph.microsoft.com/v1.0/me/onenote/notebooks'
+##        data={
+##             "displayName": notename,
+##             }
+##        notetxt = json.loads(apiReq('post',a,url,json.dumps(data)).text)
+##        print('    创建笔记本分区')
+##        url=r'https://graph.microsoft.com/v1.0/me/onenote/notebooks/'+notetxt['id']+r'/sections'
+##        data={
+##             "displayName": notename,
+##             }
+##        apiReq('post',a,url,json.dumps(data))
+##        print('    删除笔记本')
+##        url=r'https://graph.microsoft.com/v1.0/me/drive/root:/Notebooks/'+notename
+##        apiReq('delete',a,url)
+##    except:
+##        print("        操作中断")
+##        if sys._getframe().f_code.co_name not in log_list[a]:
+##            log_list[a]=log_list[a]+sys._getframe().f_code.co_name+','
+##        return
         
 def sendTgBot(content):
     headers={
